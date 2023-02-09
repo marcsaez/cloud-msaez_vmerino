@@ -1,19 +1,16 @@
-#Amazon Linux 2 AMI (Latest)
-data "aws_ami" "al2" {
-  most_recent = true
-  owners      = ["amazon"] # Amazon
+# Ubuntu Server 22.04 AMI (Latest)
+data "aws_ami" "ubuntu" {
+    most_recent = true
 
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
-  }
-  
-  filter {
-    name   = "root-device-type"
-    values = ["ebs"]
-  }
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
+    filter {
+        name   = "name"
+        values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-*"]
+    }
+
+    filter {
+        name   = "virtualization-type"
+        values = ["hvm"]
+    }
+
+    owners = ["099720109477"] # Canonical
 }
