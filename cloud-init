@@ -1,0 +1,32 @@
+#cloud-config
+
+package_upgrade: true
+
+packages:
+  - apache2
+
+write_files:
+  - path: /etc/apache2/sites-available/web1.conf
+    content: |
+      <VirtualHost *:80>
+        ServerName web1.com
+        ServerAlias www.web1.com
+        DocumentRoot /var/www/web1
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+      </VirtualHost>
+  - path: /etc/apache2/sites-available/web2.conf
+    content: |
+      <VirtualHost *:80>
+        ServerName web2.com
+        ServerAlias www.web2.com
+        DocumentRoot /var/www/web2
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+      </VirtualHost>
+
+runcmd:
+  - a2dissite 000-default.conf
+  - a2ensite web1.conf
+  - a2ensite web2.conf
+  - systemctl restart apache2
