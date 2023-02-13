@@ -5,6 +5,7 @@ resource "aws_instance" "hosting" {
     key_name      = aws_key_pair.marc.key_name
     vpc_security_group_ids = [aws_security_group.hosting.id]
     associate_public_ip_address = true
+    user_data_base64 = base64encode(data.template_file.cloud-init-config.rendered)
     tags = {
       "Name" = "${var.name}hosting"
     }

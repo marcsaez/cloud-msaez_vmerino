@@ -14,3 +14,8 @@ data "aws_ami" "ubuntu" {
 
     owners = ["099720109477"] # Canonical
 }
+
+# cloud-init.yaml
+data "template_file" "cloud-init-config" {
+  template = file("./config/cloud-init.yaml")
+}
