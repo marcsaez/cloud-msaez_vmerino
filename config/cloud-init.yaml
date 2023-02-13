@@ -12,8 +12,6 @@ write_files:
         ServerName web1.com
         ServerAlias www.web1.com
         DocumentRoot /var/www/web1
-        ErrorLog ${APACHE_LOG_DIR}/error.log
-        CustomLog ${APACHE_LOG_DIR}/access.log combined
       </VirtualHost>
   - path: /etc/apache2/sites-available/web2.conf
     content: |
@@ -21,8 +19,6 @@ write_files:
         ServerName web2.com
         ServerAlias www.web2.com
         DocumentRoot /var/www/web2
-        ErrorLog ${APACHE_LOG_DIR}/error.log
-        CustomLog ${APACHE_LOG_DIR}/access.log combined
       </VirtualHost>
 
 runcmd:
@@ -30,3 +26,5 @@ runcmd:
   - a2ensite web1.conf
   - a2ensite web2.conf
   - systemctl restart apache2
+  - sudo mkdir /var/www/web1
+  - sudo mkdir /var/www/web2
