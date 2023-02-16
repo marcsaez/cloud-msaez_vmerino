@@ -4,22 +4,27 @@ package_upgrade: true
 
 packages:
   - apache2
+  - php
+  - mysql-server
+  - libapache2-mod-php 
+  - php-mysql
 
 write_files:
   - path: /etc/apache2/sites-available/web1.conf
     content: |
       <VirtualHost *:80>
-        ServerName web1.com
-        ServerAlias www.web1.com
+        ServerName ${public_ip}
+        ServerAlias www.msaez1.cf
         DocumentRoot /var/www/web1
       </VirtualHost>
   - path: /etc/apache2/sites-available/web2.conf
     content: |
       <VirtualHost *:80>
-        ServerName web2.com
-        ServerAlias www.web2.com
+        ServerName ${public_ip}
+        ServerAlias vmerino.cf
         DocumentRoot /var/www/web2
       </VirtualHost>
+  
 
 runcmd:
   - a2dissite 000-default.conf
@@ -28,3 +33,10 @@ runcmd:
   - systemctl restart apache2
   - sudo mkdir /var/www/web1
   - sudo mkdir /var/www/web2
+
+write_files:
+  - path: /var/www/web1/index.html
+    content: |
+      <h1>
+        HOLA ESTA ES MI WEBo (MARC)
+      </h1>
