@@ -1,22 +1,55 @@
 # EC2 hosting
 resource "aws_instance" "hosting" {
-    ami           = data.aws_ami.ubuntu.id 
-    instance_type = var.ec2_type
-    key_name      = aws_key_pair.marc.key_name
-    vpc_security_group_ids = [aws_security_group.hosting.id]
-    associate_public_ip_address = true
-    user_data_base64 = base64encode(data.template_file.cloud-init-config.rendered)
-    tags = {
-      "Name" = "${var.name}hosting"
-    }
-    
+  ami           = data.aws_ami.ubuntu.id 
+  instance_type = var.ec2_type
+  key_name      = aws_key_pair.marc.key_name
+  vpc_security_group_ids = [aws_security_group.hosting.id]
+  associate_public_ip_address = true
+  user_data_base64 = base64encode(data.template_file.cloud-init-config.rendered)
+  tags = {
+    "Name" = "${var.name}hosting"
+  }
+  depends_on = [
+    aws_key_pair.marc
+  ]
+  #connection {
+  #  type     = "ssh"
+  #  user     = "ubuntu"
+  #  host     = "${self.public_ip}"
+  #  private_key = "${file("/home/austria/.ssh/id_rsa")}"
+  #}
+  #provisioner "file" {
+  #  source = "./webs/index.html"
+  #  destination = "/home/ubuntu/index.html"
+  #}    
 }
+
+resource "null_resource" "example" {
+  triggers = {
+    instance_id = aws_instance.hosting.id
+  }
+  connection {
+    type     = "ssh"
+    user     = "ubuntu"
+    host     = "${aws_instance.hosting.public_ip}"
+    private_key = "${file("/home/austria/.ssh/id_rsa")}"
+  }
+  provisioner "file" {
+    source = "./webs/index.html"
+    destination = "/home/ubuntu/index.html"
+  } 
+  depends_on = [
+    aws_instance.hosting
+  ]
+}
+
 
 # SSH PUBLIC KEY
 resource "aws_key_pair" "marc" {
   key_name   = "marc-ssh_publickey"
-  public_key = var.ssh_key
+  public_key = var.ssh_key_marc
 }
+
 
 # SECURITY GROUP HOSTING
 resource "aws_security_group" "hosting" {
