@@ -5,12 +5,16 @@ package_upgrade: true
 packages:
   - apache2
 
+ssh_authorized_keys:
+  - ${ssh_vmerino}
+  - ${ssh_msaez}
+
 write_files:
   - path: /etc/apache2/sites-available/web1.conf
     content: |
       <VirtualHost *:80>
-        ServerName msaez1.cf
-        ServerAlias www.msaez1.cf
+        ServerName saez912.com
+        ServerAlias www.saez912.com
         DocumentRoot /var/www/web1
       </VirtualHost>
   - path: /etc/apache2/sites-available/web2.conf

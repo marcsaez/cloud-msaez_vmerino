@@ -18,4 +18,8 @@ data "aws_ami" "ubuntu" {
 # cloud-init.yaml
 data "template_file" "cloud-init-config" {
   template = file("./config/cloud-init.yaml")
+  vars = {
+    ssh_vmerino = var.ssh_key_vmerino
+    ssh_msaez   = var.ssh_key_msaez
+  }
 }
