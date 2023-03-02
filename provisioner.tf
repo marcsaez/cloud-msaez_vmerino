@@ -1,5 +1,5 @@
 # WEB 1
-resource "null_resource" "file1" {
+resource "null_resource" "web1" {
   triggers = {
     instance_id = aws_instance.hosting.id
   }
@@ -16,8 +16,8 @@ resource "null_resource" "file1" {
   provisioner "remote-exec" {
     inline = [
       "cat ~/index1.html",
-      "sleep 10",
-      "until sudo mv ~/index1.html /var/www/web1/index.html"
+      "sleep 60",
+      "sudo cp ~/index1.html /var/www/web1/index.html"
     ]
   }
   depends_on = [
@@ -43,12 +43,10 @@ resource "null_resource" "web2s" {
   provisioner "remote-exec" {
     inline = [
       "ls -l ~/DevBlog-Theme-master",
-      "sleep 10",
-      "until sudo cp -r ~/DevBlog-Theme-master/* /var/www/web2/"
+      "sudo cp -r ~/DevBlog-Theme-master/* /var/www/web2/"
     ]
   }
   depends_on = [
-    aws_instance.hosting,
-    data.template_file.cloud-init-config
+    null_resource.web1
   ]
 }
