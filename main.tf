@@ -16,7 +16,7 @@ resource "aws_instance" "hosting" {
   #  type     = "ssh"
   #  user     = "ubuntu"
   #  host     = "${self.public_ip}"
-  #  private_key = "${file("/home/austria/.ssh/id_rsa")}"
+  #  private_key = "${file("~/.ssh/id_rsa")}"
   #}
   #provisioner "file" {
   #  source = "./webs/index.html"
