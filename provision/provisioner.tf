@@ -1,12 +1,19 @@
+data "terraform_remote_state" "main" {
+  backend = "local"
+  config = {
+    path = "../terraform.tfstate"
+  }
+}
+
 # WEB 1
 resource "null_resource" "web1" {
   triggers = {
-    instance_id = aws_instance.hosting.id
+    instance_id = data.terraform_remote_state.main.outputs.ip_ec2
   }
   connection {
     type     = "ssh"
     user     = "ubuntu"
-    host     = "${aws_instance.hosting.public_ip}"
+    host     = "${data.terraform_remote_state.main.outputs.ip_ec2}"
     private_key = "${file("~/.ssh/id_rsa")}"
   }
   provisioner "file" {
@@ -20,20 +27,16 @@ resource "null_resource" "web1" {
       "sudo cp ~/index1.html /var/www/web1/index.html"
     ]
   }
-  depends_on = [
-    aws_instance.hosting,
-    data.template_file.cloud-init-config
-  ]
 }
 
 resource "null_resource" "web2s" {
   triggers = {
-    instance_id = aws_instance.hosting.id
+    instance_id = data.terraform_remote_state.main.outputs.ip_ec2
   }
   connection {
     type     = "ssh"
     user     = "ubuntu"
-    host     = "${aws_instance.hosting.public_ip}"
+    host     = "${data.terraform_remote_state.main.outputs.ip_ec2}"
     private_key = "${file("~/.ssh/id_rsa")}"
   }
   provisioner "file" {
