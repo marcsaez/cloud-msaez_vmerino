@@ -1,0 +1,36 @@
+#cloud-config
+
+package_upgrade: true
+
+packages:
+  - apache2
+
+
+write_files:
+  - path: /etc/apache2/sites-available/web1.conf
+    content: |
+      <VirtualHost *:80>
+        ServerName saez912.com
+        ServerAlias www.saez912.com
+        DocumentRoot /var/www/web1
+      </VirtualHost>
+  - path: /etc/apache2/sites-available/web2.conf
+    content: |
+      <VirtualHost *:80>
+        ServerName vmerino.cf
+        ServerAlias www.vmerino.cf
+        DocumentRoot /var/www/web2
+      </VirtualHost>
+  
+
+runcmd:
+  - a2dissite 000-default.conf
+  - a2ensite web1.conf
+  - a2ensite web2.conf
+  - systemctl restart apache2
+  - sudo mkdir /var/www/web1
+  - sudo mkdir /var/www/web2
+  - git clone https://github.com/marcsaez/website.git
+  - cp -r ~/website/* /var/www/web1
+  - git clone https://github.com/VictorMerinoRodriguez/Landing-page.git 
+  - cp -r ~/Landing-page/* /var/www/web2 
