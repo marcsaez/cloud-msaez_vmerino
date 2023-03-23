@@ -20,8 +20,10 @@ resource "aws_autoscaling_group" "main" {
   vpc_zone_identifier = data.aws_subnets.default.ids
   min_size = 2
   max_size = 10
+
   target_group_arns = [aws_lb_target_group.asg.arn]
   health_check_type = "ELB"
+  
   tag {
     key                 = "Name"
     value               = "terraform-asg"
@@ -72,6 +74,39 @@ resource "aws_security_group" "instances" {
 }
 
 
+
+
+/*+++++++++++++++++++++++++++++++++++++++++
+  CONFIGURACIÓ DE APLICATION LOAD BALANCER |
++++++++++++++++++++++++++++++++++++++++++++*/
+
+# LOAD BALANCER
+resource "aws_lb" "main" {
+  name               = "terraform-asg"
+  load_balancer_type = "application"
+  subnets            = data.aws_subnets.default.ids
+  security_groups    = [aws_security_group.alb.id]
+}
+
+
+# LISTENER LB 80 HTTP
+resource "aws_lb_listener" "http" {
+  load_balancer_arn = aws_lb.main.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  
+  default_action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "404: page not found"
+      status_code  = 404
+    }
+  }
+}
+
 # SECURITY GROUP LOAD BALANCER
 resource "aws_security_group" "alb" {
   name = "terraform-alb"
@@ -91,37 +126,8 @@ resource "aws_security_group" "alb" {
   }
 }
 
-/*+++++++++++++++++++++++++++++++++++++++++
-  CONFIGURACIÓ DE APLICATION LOAD BALANCER |
-+++++++++++++++++++++++++++++++++++++++++++*/
 
-# LOAD BALANCER
-resource "aws_lb" "example" {
-  name               = "terraform-asg"
-  load_balancer_type = "application"
-  subnets            = data.aws_subnets.default.ids
-  security_groups    = [aws_security_group.alb.id]
-}
-
-
-
-resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.example.arn
-  port              = 80
-  protocol          = "HTTP"
-
-  
-  default_action {
-    type = "fixed-response"
-
-    fixed_response {
-      content_type = "text/plain"
-      message_body = "404: page not found"
-      status_code  = 404
-    }
-  }
-}
-
+# LB TARGET GROUP
 resource "aws_lb_target_group" "asg" {
   name     = "terraform-asg"
   port     = 80
@@ -139,6 +145,7 @@ resource "aws_lb_target_group" "asg" {
   }
 }
 
+# REGLAS DEL LB LISTENER
 resource "aws_lb_listener_rule" "asg" {
   listener_arn = aws_lb_listener.http.arn
   priority     = 100
