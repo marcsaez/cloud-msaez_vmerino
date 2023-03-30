@@ -33,8 +33,11 @@ runcmd:
   - systemctl restart apache2
   - sudo mkdir /var/www/web1
   - sudo mkdir /var/www/web2
-  - sleep 60
-  - git clone https://github.com/marcsaez/website.git
-  - cp -r ~/website/* /var/www/web1
-  - git clone https://github.com/VictorMerinoRodriguez/Landing-page.git 
-  - cp -r ~/Landing-page/* /var/www/web2 
+  - sudo rm -rf /var/www/html
+  # - echo "<h1>Hola mundo! </h1>" > /var/www/web1/index.html
+  # - curl ifconfig.me >> /var/www/web1/index.html
+   - sleep 60
+   - git clone https://github.com/marcsaez/website.git
+   - sudo cp -r ~/website/* /var/www/web1
+   - git clone https://github.com/VictorMerinoRodriguez/Landing-page.git 
+   - sudo cp -r ~/Landing-page/* /var/www/web2 
