@@ -5,7 +5,7 @@ resource "aws_instance" "hosting" {
   tags = {
     "Name" = "msaez"
   } 
-  vpc_security_group_ids = aws_security_group.hosting.id
+  vpc_security_group_ids = [aws_security_group.hosting.id]
 }
 
 
@@ -18,7 +18,7 @@ resource "aws_instance" "hosting" {
 
 # SECURITY GROUP HOSTING
 resource "aws_security_group" "hosting" {
-  name = "${var.name}sg-hosting"
+  name = "msaezsg-hosting"
   egress {
       cidr_blocks      = [ "0.0.0.0/0" ]
       description      = ""

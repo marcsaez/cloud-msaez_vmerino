@@ -5,13 +5,18 @@
 # Plantilla EC2
 resource "aws_launch_configuration" "main" {
   image_id        = data.aws_ami.ubuntu.id
-  instance_type   = "t2.micro"
+  instance_type   = "t2.medium"
   security_groups = [aws_security_group.instances.id]
   user_data_base64 = base64encode(data.template_file.cloud-init-config.rendered)
-  
+  key_name = aws_key_pair.marc.key_name
   lifecycle {
     create_before_destroy = true
   }
+}
+
+resource "aws_key_pair" "marc" {
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDpJGWF4vUpSyZgsT6/uylFwecdaL4six8YOgy2PmPnJCmwwbI6jUuPy8LsWfc7paRsc976/8IxUGOxlxQ7EucMrz5NrfPhjUv6DDztEKNTFg2moSCdReNuBNqjmdSd1Z68uVmMFqSMfbLfds7c+Kib3UF/VreKDS5nKs6gjLlQhjwbWtBW8WAAX2c0kqr6UbiGhYPDF2eiGLjPa6donhYxdaFZwN0cIVMWY48WX51Ptd9qJTKvtE10ZOgkmKy3LZK56+V0IJ81UC/DWEmrS0nHU2lolY8vsYrDSftf+krpvhKbx76FulPV8ZGRyxbOaNU/OhifyjZ6WTpAOmdOyy9AgjTNvx8/UIdOQkKeaHMuxwRWT7FIECziM+TqCLChjrv+RpZvIPuLKLLoX/AS1FsZbd6zNN9sHfNTQMTRqfEjE+5OIlteK8VuMMM5t1QyZeusb8/Ouz0YDA5vMuxTUFxucwP7jm+FFcU4jZjgPsxz2WUPedqJgeUluuXmh/xpFFE= austria@austria-Lenovo-V14-ADA"
+  key_name = "msaez"
 }
 
 # AUTO ESCALING
