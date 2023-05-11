@@ -1,22 +1,10 @@
-terraform {
-   backend "s3" {
-     bucket         = "terraform-up-and-running-state-msaez"
-     key            = "global/s3/terraform.tfstate"
-     region         = "us-east-1"
-     profile        = "insti"
-     dynamodb_table = "terraform-up-and-running-locks"
-     encrypt        = true
-   }
-}
-
-
 provider "aws" {
-  region = "us-east-1"
-  profile = "insti"
+  region     = "us-east-1"
+  profile    = "insti"
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "terraform-up-and-running-state-msaez"
+  bucket = "terraform-state-msaez"
 }
 
 resource "aws_s3_bucket_versioning" "enabled" {
@@ -44,7 +32,7 @@ resource "aws_s3_bucket_public_access_block" "public_access" {
   restrict_public_buckets = true
 }
 resource "aws_dynamodb_table" "terraform_locks" {
-  name         = "terraform-up-and-running-locks"
+  name         = "terraform-locks"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LockID"
 
