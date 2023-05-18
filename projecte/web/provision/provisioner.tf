@@ -17,13 +17,15 @@ resource "null_resource" "web1" {
     private_key = "${file("~/.ssh/id_rsa")}"
   }
   provisioner "file" {
-    source = "./webs/index.html"
-    destination = "/home/ubuntu/index1.html"
+    source = "./webs/DevBlog-Theme-master"
+    destination = "/home/ubuntu/"
+    
   } 
   provisioner "remote-exec" {
     inline = [
-      "cat ~/index1.html",
-      "sudo cp ~/index1.html /var/www/web1/index.html"
+      "ls -l ~/DevBlog-Theme-master",
+      "sudo cp -r ~/DevBlog-Theme-master/* /var/www/web1/"
+      
     ]
   }
 }
@@ -39,13 +41,13 @@ resource "null_resource" "web2s" {
     private_key = "${file("~/.ssh/id_rsa")}"
   }
   provisioner "file" {
-    source = "./webs/DevBlog-Theme-master"
-    destination = "/home/ubuntu/"
+    source = "./webs/index.html"
+    destination = "/home/ubuntu/index1.html"
   } 
   provisioner "remote-exec" {
     inline = [
-      "ls -l ~/DevBlog-Theme-master",
-      "sudo cp -r ~/DevBlog-Theme-master/* /var/www/web2/"
+      "cat ~/index1.html",
+      "sudo cp ~/index1.html /var/www/web2/index.html"
     ]
   }
   depends_on = [
