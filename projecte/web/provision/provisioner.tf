@@ -1,3 +1,4 @@
+# Llegeix el terraform.tfstate anterior per poder indicar-li recursos d'un altre módul
 data "terraform_remote_state" "main" {
   backend = "local"
   config = {
@@ -5,22 +6,26 @@ data "terraform_remote_state" "main" {
   }
 }
 
-# WEB 1
+# WEB 1, aprovisiona el repositori local i el copia a la EC2 indicada
 resource "null_resource" "web1" {
+  # Instancia a la que apunta
   triggers = {
     instance_id = data.terraform_remote_state.main.outputs.ip_ec2
   }
+  # Conexxió SSH
   connection {
     type     = "ssh"
     user     = "ubuntu"
     host     = "${data.terraform_remote_state.main.outputs.ip_ec2}"
     private_key = "${file("~/.ssh/id_rsa")}"
   }
+  # Origen i destí del arxiu
   provisioner "file" {
     source = "./webs/DevBlog-Theme-master"
     destination = "/home/ubuntu/"
     
   } 
+  # Comandes que executa a la instancia remota
   provisioner "remote-exec" {
     inline = [
       "ls -l ~/DevBlog-Theme-master",

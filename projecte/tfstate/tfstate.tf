@@ -3,10 +3,12 @@ provider "aws" {
   profile    = "insti"
 }
 
+# S3 Bucket
 resource "aws_s3_bucket" "terraform_state" {
   bucket = "terraform-state-msaez"
 }
 
+# Habilitar el versionat al S3
 resource "aws_s3_bucket_versioning" "enabled" {
   bucket = aws_s3_bucket.terraform_state.id
   versioning_configuration {
@@ -14,6 +16,7 @@ resource "aws_s3_bucket_versioning" "enabled" {
   }
 }
 
+# Aplicar encriptat al S3
 resource "aws_s3_bucket_server_side_encryption_configuration" "default" {
   bucket = aws_s3_bucket.terraform_state.id
 
@@ -24,6 +27,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "default" {
   }
 }
 
+# Bloquejar l'accés públic al S3
 resource "aws_s3_bucket_public_access_block" "public_access" {
   bucket                  = aws_s3_bucket.terraform_state.id
   block_public_acls       = true
@@ -31,6 +35,8 @@ resource "aws_s3_bucket_public_access_block" "public_access" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
+
+# DynamoDB per al control de apply
 resource "aws_dynamodb_table" "terraform_locks" {
   name         = "terraform-locks"
   billing_mode = "PAY_PER_REQUEST"

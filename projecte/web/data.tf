@@ -1,4 +1,4 @@
-# Ubuntu Server 22.04 AMI (Latest)
+# Busca l'imatge de Ubuntu Server 22.04 (Latest)
 data "aws_ami" "ubuntu" {
     most_recent = true
 
@@ -15,7 +15,7 @@ data "aws_ami" "ubuntu" {
     owners = ["099720109477"] # Canonical
 }
 
-# cloud-init.yaml
+# Llegeix el cloud-init.yaml 
 data "template_file" "cloud-init-config" {
   template = file("./config/cloud-init.yaml")
   vars = {

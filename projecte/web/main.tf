@@ -3,6 +3,7 @@ provider "aws" {
   profile = "insti"
 }
 
+# Instancia EC2 de AWS
 resource "aws_instance" "hosting" {
   ami           = "ami-007855ac798b5175e"#data.aws_ami.ubuntu.id 
   instance_type = var.ec2_type
@@ -37,7 +38,7 @@ resource "aws_instance" "hosting" {
 #}
 
 
-# SECURITY GROUP HOSTING
+# SECURITY GROUP de la ec2
 resource "aws_security_group" "hosting" {
   name = "${var.name}sg-hosting"
   egress {

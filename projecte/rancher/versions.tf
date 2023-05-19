@@ -1,5 +1,6 @@
 # Versions
 terraform {
+  # On llegeix/escriu el terraform.tfstate
   backend "s3" {
      bucket         = "terraform-state-msaez"
      key            = "global/s3/terraform.tfstate"
@@ -8,6 +9,7 @@ terraform {
      dynamodb_table = "terraform-locks"
      encrypt        = true
   }
+  # Proveïdors i versions necessàries
   required_providers {
     helm = {
       source  = "hashicorp/helm"

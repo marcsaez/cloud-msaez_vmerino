@@ -1,26 +1,29 @@
+# Genera clau pública y privada SSH
 resource "tls_private_key" "global_key" {
   algorithm = "RSA"
   rsa_bits = 2048
 }
 
+# Escriu la clau privada a on s'indica
 resource "local_file" "ssh_private_key_pem" {
   filename = "keys/id_rsa"
   sensitive_content = tls_private_key.global_key.private_key_pem
   file_permission = "0600"
 }
 
+# Escriu la clau pública a on s'indica
 resource "local_file" "ssh_public_key_openssh" {
   filename = "keys/id_rsa.pub"
   content = tls_private_key.global_key.public_key_openssh
 }
 
-# SSH Key pair
+# Copia la clau pública a AWS
 resource "aws_key_pair" "rancher_key_pair" {
   key_name = "rancher-key"
   public_key = tls_private_key.global_key.public_key_openssh
 }
 
-# Security group 
+# Security group de Rancher
 resource "aws_security_group" "rancher_sg_allowall" {
   name        = "rancher_sg_msaez"
   description = "Rancher"
@@ -202,7 +205,7 @@ resource "aws_security_group" "rancher_sg_allowall" {
   depends_on = [aws_key_pair.rancher_key_pair]
 }
 
-
+# Crea la EC2 a AWS
 resource "aws_instance" "rancher" {
   ami = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
