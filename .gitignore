@@ -1,4 +1,4 @@
 .terraform
 *.tfstate*
 .terraform*
-./03\:tfstate/keys/*
+id_rsa*
